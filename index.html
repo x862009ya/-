@@ -169,31 +169,6 @@
         .info-card div:last-child { border-right: none; }
         .info-card span { display: block; font-size: 13px; opacity: 0.85; margin-bottom: 5px; }
         .info-card strong { font-size: 18px; font-weight: bold; }
-/* ==========================================
-   📱 針對手機與平板螢幕的響應式優化 (RWD)
-   ========================================== */
-@media (max-width: 768px) {
-    body {
-        padding: 10px; /* 手機版邊距縮小，留更多畫面給內容 */
-    }
-
-    h1 {
-        font-size: 24px; /* 手機版標題字體稍微調小，避免折行太難看 */
-        margin-bottom: 15px;
-    }
-
-    /* 關鍵優化：把原本的 1fr 1fr (雙欄) 強制降級為 1fr (單欄) */
-    .middle-grid {
-        grid-template-columns: 1fr; 
-        gap: 15px; /* 手機版間距稍微縮小，看起來更緊湊 */
-    }
-    
-    /* 如果你的彈出視窗(Modal)在手機上看太寬，也可以順便在這裡優化 */
-    .modal-content {
-        width: 90% !important; /* 確保彈出視窗在手機上不會爆出去 */
-        margin: 20% auto;
-    }
-}
     </style>
 </head>
 <body>
@@ -525,32 +500,33 @@
     }
 
     function saveRecords(records) {
-        records.sort((a, b) => new Date(b.date) - new Date(a.date));
-        localStorage.setItem('fitness_records', JSON.stringify(records));
-        showRecords();
-        updateChart();
-        calculateTodayNutritionAndSports();
-        renderCustomTags();
-        renderMuscleTags(); 
-    }
-
-    function toggleCollapse(contentId, arrowId, storageKey, forceOpen = null) {
-        const content = document.getElementById(contentId);
-        const arrow = document.getElementById(arrowId);
-        
-        let shouldOpen = !content.classList.contains('open');
-        if (forceOpen !== null) shouldOpen = forceOpen;
-
-        if (shouldOpen) {
-            content.classList.add('open');
-            arrow.innerText = "▲";
-            localStorage.setItem(storageKey, 'true');
-        } else {
-            content.classList.remove('open');
-            arrow.innerText = "▼";
-            localStorage.setItem(storageKey, 'false');
-        }
-    }
+        function saveRecords(records) {
+    // 1. 繼續保持本地儲存，確保離線也能用
+    records.sort((a, b) => new Date(b.date) - new Date(a.date));
+    localStorage.setItem('fitness_records', JSON.stringify(records));
+    
+    // 2. 更新頁面顯示 (保持你原有的 UI 功能)
+    showRecords();
+    updateChart();
+    calculateTodayNutritionAndSports();
+    renderCustomTags();
+    renderMuscleTags();
+    
+    // 3. 【新增】這裡我們自動把「最新一筆資料」送去雲端
+    const latestRecord = records[0]; 
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyna7m7kTN1AgXtCh_YvPrXpWAr6-26NzqnAAi3c3QH54XW-xV_yW7FiciQZbdWTx19/exec"; // <--- 把網址貼在這裡！
+    
+    fetch(WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors', // 避免跨域錯誤
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(latestRecord)
+    }).then(() => {
+        console.log("資料已同步至雲端試算表");
+    }).catch(err => {
+        console.log("離線中，資料已儲存於本地");
+    });
+}
 
     // 💡 切換重訓與有氧輸入欄位
     function toggleSportInputs() {
