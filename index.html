@@ -166,7 +166,24 @@
         .info-card div { flex: 1; text-align: center; border-right: 1px solid rgba(255,255,255,0.2); }
         .info-card div:last-child { border-right: none; }
         .info-card span { display: block; font-size: 13px; opacity: 0.85; margin-bottom: 5px; }
-        .info-card strong { font-size: 18px; font-weight: bold; }
+        .info-card strong { font-size: 18px; font-weight: bold; }        
+@media (max-width: 768px) {
+    body {
+        padding: 10px; 
+    }
+    h1 {
+        font-size: 24px; 
+        margin-bottom: 15px;
+    }
+    .middle-grid {
+        grid-template-columns: 1fr; 
+        gap: 15px;
+    }
+        .modal-content {
+        width: 90% !important; 
+        margin: 20% auto;
+    }
+}
     </style>
 </head>
 <body>
