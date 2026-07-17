@@ -169,6 +169,31 @@
         .info-card div:last-child { border-right: none; }
         .info-card span { display: block; font-size: 13px; opacity: 0.85; margin-bottom: 5px; }
         .info-card strong { font-size: 18px; font-weight: bold; }
+/* ==========================================
+   📱 針對手機與平板螢幕的響應式優化 (RWD)
+   ========================================== */
+@media (max-width: 768px) {
+    body {
+        padding: 10px; /* 手機版邊距縮小，留更多畫面給內容 */
+    }
+
+    h1 {
+        font-size: 24px; /* 手機版標題字體稍微調小，避免折行太難看 */
+        margin-bottom: 15px;
+    }
+
+    /* 關鍵優化：把原本的 1fr 1fr (雙欄) 強制降級為 1fr (單欄) */
+    .middle-grid {
+        grid-template-columns: 1fr; 
+        gap: 15px; /* 手機版間距稍微縮小，看起來更緊湊 */
+    }
+    
+    /* 如果你的彈出視窗(Modal)在手機上看太寬，也可以順便在這裡優化 */
+    .modal-content {
+        width: 90% !important; /* 確保彈出視窗在手機上不會爆出去 */
+        margin: 20% auto;
+    }
+}
     </style>
 </head>
 <body>
