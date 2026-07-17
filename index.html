@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🏋️‍♂️ 運動、體重與飲食記錄器 (整合有氧與消耗熱量版)</title>
-    <!-- 引入網頁繪圖工具 Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 20px; }
@@ -156,38 +155,43 @@
         .item-list { margin: 0; padding-left: 18px; line-height: 1.5; font-size: 13px; }
         .item-list li { margin-bottom: 4px; }
         .diary-text-box { background: #fffcf9; border-left: 3px solid #e84393; padding: 6px 10px; border-radius: 4px; margin-top: 6px; font-size: 13px; color: #555; }
-
-@media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
-
-    h1 {
-        font-size: 24px; 
-        margin-bottom: 15px;
-    }
-
-    
-    .middle-grid {
-        grid-template-columns: 1fr; 
-        gap: 15px; 
-    }
-    
-   
-    .modal-content {
-        width: 90% !important; 
-        margin: 20% auto;
-    }
-}
+        
+        /* 每日報告彈窗樣式 */
+        #report-text { width: 100%; height: 280px; font-family: monospace; white-space: pre-wrap; margin-bottom: 15px; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; line-height: 1.5; }
+        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close:hover, .close:focus { color: black; text-decoration: none; }
+        
+        /* 個人資訊卡片樣式 */
+        .info-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .info-card div { flex: 1; text-align: center; border-right: 1px solid rgba(255,255,255,0.2); }
+        .info-card div:last-child { border-right: none; }
+        .info-card span { display: block; font-size: 13px; opacity: 0.85; margin-bottom: 5px; }
+        .info-card strong { font-size: 18px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <h1>🏋️‍♂️ 運動、體重與飲食記錄器</h1>
-
+    <div class="info-card">
+        <div>
+            <span>身高</span>
+            <strong>175 cm</strong>
+        </div>
+        <div>
+            <span>起始體重</span>
+            <strong>97.0 kg</strong>
+        </div>
+        <div>
+            <span>2026年9月中 目標減重</span>
+            <strong>4 ~ 8 kg</strong>
+        </div>
+        <div>
+            <span>目標體重區間</span>
+            <strong>89.0 ~ 93.0 kg</strong>
+        </div>
+    </div>
     <div class="dashboard-container">
         
-        <!-- 1. 今日數據看板 (橫跨整寬，最頂端) -->
         <div class="card" style="background: #eef2f7;">
             <h3 style="color: #2c3e50;">📊 今日數據看板 (<span id="today-date-text"></span>)</h3>
             <div class="nutrition-summary">
@@ -195,7 +199,6 @@
                 <div>🥩 今日總蛋白: <span id="today-protein">0</span> g</div>
             </div>
             
-            <!-- 飲食與運動並排細節區 -->
             <div class="today-detail-grid">
                 <div>
                     <div class="list-title">🍽️ 今日飲食明細</div>
@@ -208,13 +211,10 @@
             </div>
         </div>
 
-        <!-- 2. 中部雙列輸入區 -->
         <div class="middle-grid">
             
-            <!-- 左半部：體重圖 ➔ 飲食 ➔ 體重 -->
             <div class="column">
                 
-                <!-- 體重趨勢圖 -->
                 <div class="card">
                     <h3 style="color: #007bff;">📈 體重趨勢變化圖</h3>
                     <div class="chart-container">
@@ -222,11 +222,9 @@
                     </div>
                 </div>
 
-                <!-- 記錄飲食區 -->
                 <div class="card" style="border-left: 5px solid #ff9f43;">
                     <h3 style="color: #ff9f43;">🍎 記錄飲食</h3>
                     
-                    <!-- 可折疊的常用飲食標籤 -->
                     <div class="collapse-header" onclick="toggleCollapse('tags-collapse-content', 'collapse-arrow', 'tags_box_open')">
                         <span>⭐ 常用飲食快速標籤 (點擊展開/收起)</span>
                         <span id="collapse-arrow">▼</span>
@@ -263,7 +261,6 @@
                     <button onclick="addFood()" style="background: #ff9f43;">記錄飲食</button>
                 </div>
 
-                <!-- 記錄體重區 -->
                 <div class="card">
                     <h3 style="color: #007bff;">📝 記錄體重</h3>
                     <label>日期</label>
@@ -275,14 +272,11 @@
 
             </div>
             
-            <!-- 右半部：運動與運動日記 -->
             <div class="column">
                 
-                <!-- 記錄運動區 (整合重訓與有氧) -->
                 <div class="card" style="border-left: 5px solid #17a2b8; display: flex; flex-direction: column;">
                     <h3 style="color: #17a2b8;">🏃‍♂️ 記錄運動 & 有氧</h3>
 
-                    <!-- 選擇要記錄「重訓」還是「有氧」 -->
                     <label>運動類型</label>
                     <select id="sport-type-select" onchange="toggleSportInputs()">
                         <option value="重訓" selected>💪 肌力重訓</option>
@@ -292,7 +286,6 @@
                     <label>日期</label>
                     <input type="date" id="sport-date">
 
-                    <!-- ================= 肌力重訓輸入區 ================= -->
                     <div id="strength-inputs-area">
                         <div class="collapse-header sport-collapse-header" onclick="toggleCollapse('sport-tags-collapse-content', 'sport-collapse-arrow', 'sport_tags_box_open')">
                             <span>💪 肌肉部位地圖快速鍵 (點擊展開/收起)</span>
@@ -312,7 +305,6 @@
                         <input type="text" id="sport-note" placeholder="例如: 肩膀無痛">
                     </div>
 
-                    <!-- ================= 有氧運動輸入區 (新增) ================= -->
                     <div id="cardio-inputs-area" style="display: none;">
                         <label>⭐ 常用有氧快速鍵 (點擊快速輸入)</label>
                         <div class="tags-container" style="margin-bottom: 12px;">
@@ -345,7 +337,6 @@
                     <button id="add-sport-btn" onclick="addSport()" style="background: #17a2b8; margin-top: 15px;">記錄肌肉重訓</button>
                 </div>
 
-                <!-- 📓 運動日記欄位 -->
                 <div class="card" style="border-left: 5px solid #e84393;">
                     <h3 style="color: #e84393;">📓 運動日記 (追蹤延遲性肌肉痠痛/恢復狀況)</h3>
                     <label>日記日期 (可記錄隔天痠痛狀況)</label>
@@ -360,16 +351,21 @@
 
         </div>
 
-        <!-- 3. 底部一週歷史數據 -->
         <div class="card" style="border-top: 5px solid #6f42c1;">
             <div class="history-header-flex">
                 <div style="display: flex; align-items: center; gap: 20px; width: 100%; justify-content: space-between; flex-wrap: wrap;">
                     <h3 style="color: #6f42c1; margin-bottom: 0; border: none; padding: 0; font-size: 22px; font-weight: 800;">📋 一週歷史數據 (智慧歸納版)</h3>
-                    <!-- 一鍵輸出報告按鈕 -->
+
                     <button onclick="generateWeeklyReport()" style="background: #6f42c1; width: auto; padding: 8px 16px; font-size:14px; border-radius: 6px;">📋 一鍵輸出本週報告 (複製給 AI)</button>
                 </div>
             </div>
-            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="margin: 0;">📋 歷史紀錄</h3>
+            <div>
+                <button style="background-color: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; margin-right: 10px;" onclick="openReportModal()">📢 生成今日報告</button>
+                <button style="background-color: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px;" onclick="clearAll()">⚠️ 刪除所有紀錄</button>
+            </div>
+        </div>
             <div class="table-wrapper">
                 <table id="record-table">
                     <thead>
@@ -389,7 +385,6 @@
 
     </div>
 
-    <!-- ✏️ 管理/編輯彈出視窗 -->
     <div id="editListModal" class="modal">
         <div class="modal-content" style="max-width: 650px;">
             <h3 id="modal-date-title" style="color: #6f42c1; font-weight: 800; border-bottom: 2px solid #eee; padding-bottom: 8px;">⚙️ 管理與編輯</h3>
@@ -400,16 +395,25 @@
         </div>
     </div>
 
-    <!-- 週報彈出視窗 -->
-    <div id="reportModal" class="modal">
+    <div id="weeklyReportModal" class="modal">
         <div class="modal-content">
             <h2 style="margin-top:0; color: #6f42c1; font-weight: 800;">📋 本週成效報告已生成！</h2>
             <p style="font-size: 13px; color: #6c757d;">請複製框格內的所有內容，直接在對話框貼給 AI，我會為你進行詳細的成效評估與下週課表建議！</p>
             <textarea id="reportText" style="height: 250px; font-family: monospace; font-size: 12px; line-height: 1.5;" readonly></textarea>
             <div style="display:flex; gap:10px;">
-                <button onclick="copyReport()" style="background: #28a745; flex:1;">📋 複製週報內容</button>
+                <button onclick="copyWeeklyReport()" style="background: #28a745; flex:1;">📋 複製週報內容</button>
                 <button onclick="closeModal()" style="background: #6c757d; flex:1;">關閉</button>
             </div>
+        </div>
+    </div>
+
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeReportModal()">&times;</span>
+            <h3 style="color: #2c3e50; margin-top: 0;">📋 今日報告</h3>
+            <p style="font-size: 14px; color: #555;">請複製以下內容並直接貼給 Gemini 進行覆盤：</p>
+            <textarea id="report-text" readonly></textarea>
+            <button style="background-color: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-size: 16px; width: 100%;" onclick="copyReport()">📋 複製報告文字</button>
         </div>
     </div>
 
@@ -485,14 +489,34 @@
         return records ? JSON.parse(records) : [];
     }
 
-    function saveRecords(records) {
+    // 🚀 核心雲端同步儲存邏輯 (直接寫死你的 API 網址)
+    function saveRecords(records, newRecord = null) {
+        // 1. 本地儲存與排序，確保離線能用
         records.sort((a, b) => new Date(b.date) - new Date(a.date));
         localStorage.setItem('fitness_records', JSON.stringify(records));
+        
+        // 2. 更新畫面
         showRecords();
         updateChart();
         calculateTodayNutritionAndSports();
         renderCustomTags();
         renderMuscleTags(); 
+        
+        // 3. 如果有「傳入新紀錄（新增資料時）」，就同步發送到 Google 試算表
+        if (newRecord) {
+            const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyna7m7kTN1AgXtCh_YvPrXpWAr6-26NzqnAAi3c3QH54XW-xV_yW7FiciQZbdWTx19/exec";
+            
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newRecord)
+            }).then(() => {
+                console.log("資料已成功同步至 Google 試算表！");
+            }).catch(err => {
+                console.log("網路異常或離線中，資料目前暫存在本地：", err);
+            });
+        }
     }
 
     function toggleCollapse(contentId, arrowId, storageKey, forceOpen = null) {
@@ -513,7 +537,7 @@
         }
     }
 
-    // 💡 切換重訓與有氧輸入欄位
+    // 切換重訓與有氧輸入欄位
     function toggleSportInputs() {
         const sportType = document.getElementById('sport-type-select').value;
         const strengthArea = document.getElementById('strength-inputs-area');
@@ -533,7 +557,7 @@
         }
     }
 
-    // 💡 快速填入有氧項目
+    // 快速填入有氧項目
     function quickFillCardio(activity) {
         document.getElementById('cardio-name').value = activity;
         document.getElementById('cardio-duration').focus();
@@ -642,13 +666,14 @@
     function quickAddFood(name, calories, protein, mealType) {
         const date = document.getElementById('food-date').value;
         const records = getRecords();
-        records.push({
+        const newRec = {
             date,
             category: mealType,
             value: name,
             note: `熱量: ${calories} kcal | 蛋白質: ${protein} g`
-        });
-        saveRecords(records);
+        };
+        records.push(newRec);
+        saveRecords(records, newRec); // 傳送新紀錄進行雲端同步
     }
 
     function autoMatchFood() {
@@ -677,13 +702,14 @@
         if (!name) return alert("請輸入食物名稱！");
 
         const records = getRecords();
-        records.push({
+        const newRec = {
             date,
             category: mealType,
             value: name,
             note: `熱量: ${calories} kcal | 蛋白質: ${protein} g`
-        });
-        saveRecords(records);
+        };
+        records.push(newRec);
+        saveRecords(records, newRec); // 傳送新紀錄進行雲端同步
 
         document.getElementById('food-name').value = "";
         document.getElementById('food-calories').value = "";
@@ -696,16 +722,18 @@
         if (isNaN(weight) || weight <= 0) return alert("請輸入正確的體重數值！");
 
         const records = getRecords();
-        records.push({ date, category: "體重", value: weight + " kg", note: "每日量測" });
-        saveRecords(records);
+        const newRec = { date, category: "體重", value: weight + " kg", note: "每日量測" };
+        records.push(newRec);
+        saveRecords(records, newRec); // 傳送新紀錄進行雲端同步
         document.getElementById('weight-input').value = "";
     }
 
-    // 💡 肌力重訓 & 有氧運動新增功能整合
+    // 肌力重訓 & 有氧運動新增功能整合
     function addSport() {
         const sportType = document.getElementById('sport-type-select').value;
         const date = document.getElementById('sport-date').value;
         const records = getRecords();
+        let newRec = null;
 
         if (sportType === "重訓") {
             const name = document.getElementById('sport-name').value.trim();
@@ -713,7 +741,8 @@
             const note = document.getElementById('sport-note').value.trim();
             if (!name || !duration) return alert("請輸入重訓項目與時間/組數！");
 
-            records.push({ date, category: "運動", value: name, note: `組數/時間: ${duration} | 當下感受: ${note}` });
+            newRec = { date, category: "運動", value: name, note: `組數/時間: ${duration} | 當下感受: ${note}` };
+            records.push(newRec);
             
             // 清空
             document.getElementById('sport-name').value = "";
@@ -726,12 +755,13 @@
             const note = document.getElementById('cardio-note').value.trim();
             if (!name || !duration) return alert("請輸入有氧項目與時間！");
 
-            records.push({ 
+            newRec = { 
                 date, 
                 category: "有氧運動", 
                 value: name, 
                 note: `時間: ${duration} 分鐘 | 消耗: ${calories || 0} kcal | 備註: ${note || "無"}` 
-            });
+            };
+            records.push(newRec);
 
             // 清空
             document.getElementById('cardio-name').value = "";
@@ -740,7 +770,7 @@
             document.getElementById('cardio-note').value = "";
         }
         
-        saveRecords(records);
+        saveRecords(records, newRec); // 傳送新紀錄進行雲端同步
     }
 
     function addDiary() {
@@ -749,13 +779,14 @@
         if (!content) return alert("請輸入運動日記內容！");
 
         const records = getRecords();
-        records.push({
+        const newRec = {
             date,
             category: "運動日記",
             value: "運動日記",
             note: content
-        });
-        saveRecords(records);
+        };
+        records.push(newRec);
+        saveRecords(records, newRec); // 傳送新紀錄進行雲端同步
         document.getElementById('diary-content').value = "";
     }
 
@@ -939,7 +970,7 @@
         const item = records[index];
         if (confirm(`確定要刪除此筆記錄嗎？\n[${item.category}] ${item.value}`)) {
             records.splice(index, 1);
-            saveRecords(records);
+            saveRecords(records); // 編輯/刪除等操作時不傳第二個參數，故不觸發試算表上傳
             const hasMore = records.some(r => r.date === selectedManageDate);
             if (hasMore) {
                 openEditListModal(selectedManageDate);
@@ -955,7 +986,7 @@
         const newNote = prompt(`請輸入新的內容與備註：`, item.note);
         if (newNote !== null) {
             records[index].note = newNote.trim();
-            saveRecords(records);
+            saveRecords(records); // 編輯/刪除等操作時不傳第二個參數，故不觸發試算表上傳
             openEditListModal(selectedManageDate);
         }
     }
@@ -1009,7 +1040,7 @@
     // 生成包含重訓、有氧、消耗卡路里、日記與飲食的超全每週報告
     function generateWeeklyReport() {
         const records = getRecords();
-        const reportModal = document.getElementById('reportModal');
+        const reportModal = document.getElementById('weeklyReportModal');
         const reportText = document.getElementById('reportText');
         
         const todayObj = new Date();
@@ -1059,7 +1090,7 @@
         }
         reportStr += "\n";
 
-        // 💡 2.5 有氧運動與卡路里消耗紀錄
+        // 有氧運動與卡路里消耗紀錄
         reportStr += `【🏃‍♂️ 有氧運動與消耗熱量】\n`;
         if (cardioSports.length > 0) {
             let cardioByDate = {};
@@ -1129,15 +1160,15 @@
         reportModal.style.display = "flex";
     }
 
-    function copyReport() {
+    function copyWeeklyReport() {
         const textarea = document.getElementById('reportText');
         textarea.select();
         document.execCommand('copy');
-        alert("📋 報告內容已成功複製到剪貼簿！現在可以直接貼給我囉！");
+        alert("📋 週報內容已成功複製到剪貼簿！現在可以直接貼給我囉！");
     }
 
     function closeModal() {
-        document.getElementById('reportModal').style.display = "none";
+        document.getElementById('weeklyReportModal').style.display = "none";
     }
 
     function updateChart() {
@@ -1198,6 +1229,70 @@
         }
     }
 
+    // ========== 每日報告功能 ==========
+    function openReportModal() {
+        const records = localStorage.getItem('fitness_records') ? JSON.parse(localStorage.getItem('fitness_records')) : [];
+        if (records.length === 0) {
+            alert("目前尚無紀錄，無法生成報告！");
+            return;
+        }
+
+        // 取得最新一筆紀錄的日期
+        const todayDate = records[0].date;
+        const todaysRecords = records.filter(r => r.date === todayDate);
+        
+        let weightStr = "未量測";
+        let activitiesStr = "";
+
+        todaysRecords.forEach(r => {
+            if (r.category === "體重") {
+                weightStr = r.weight || r.value; // 兼容不同版本的變數命名
+            } else {
+                let noteInfo = r.note ? `(${r.note})` : "";
+                activitiesStr += `- 類別: ${r.category} | 項目: ${r.name || r.value} ${noteInfo}\n`;
+            }
+        });
+
+        if (activitiesStr === "") activitiesStr = "- 今日無運動或飲食紀錄\n";
+
+        // 組裝報告文字
+        const reportText = `📋 【今日健康與運動報告 - ${todayDate}】
+--------------------------------------------
+👤 個人基本檔案：
+- 身高：175 cm
+- 起始體重：97.0 kg
+- 瘦身目標：2026年9月中 減重 4~8 kg (目標體重 89.0~93.0 kg)
+
+📊 今日數據：
+- 體重：${weightStr}
+
+🏃 今日活動與飲食紀錄：
+${activitiesStr}
+--------------------------------------------
+🤖 想請 AI (Gemini) 幫我覆盤的地方：
+1. 針對我今天的紀錄，是否有需要調整飲食或運動內容的地方？
+2. 根據我的備註（若有），膝蓋或肩膀的修復狀況是否安全？
+3. 明天的訓練有什麼建議？`;
+
+        document.getElementById('report-text').value = reportText;
+        document.getElementById('reportModal').style.display = "block";
+    }
+
+    function closeReportModal() {
+        document.getElementById('reportModal').style.display = "none";
+    }
+
+    function copyReport() {
+        const text = document.getElementById('report-text');
+        text.select();
+        text.setSelectionRange(0, 99999); // 給手機用
+        navigator.clipboard.writeText(text.value).then(() => {
+            alert("✅ 報告已成功複製到剪貼簿！請直接貼在對話框給我囉！✍️");
+            closeReportModal();
+        }).catch(err => {
+            alert("❌ 複製失敗，請手動全選複製。");
+        });
+    }
 </script>
 </body>
 </html>
