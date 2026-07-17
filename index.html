@@ -156,42 +156,12 @@
         .item-list { margin: 0; padding-left: 18px; line-height: 1.5; font-size: 13px; }
         .item-list li { margin-bottom: 4px; }
         .diary-text-box { background: #fffcf9; border-left: 3px solid #e84393; padding: 6px 10px; border-radius: 4px; margin-top: 6px; font-size: 13px; color: #555; }
-/* 每日報告彈窗樣式 (本次新增) */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); }
-        .modal-content { background-color: #fff; margin: 5% auto; padding: 25px; width: 90%; max-width: 600px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
-        .close:hover, .close:focus { color: black; text-decoration: none; }
-        #report-text { width: 100%; height: 280px; font-family: monospace; white-space: pre-wrap; margin-bottom: 15px; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; line-height: 1.5; }
-        
-        /* 個人資訊卡片樣式 (本次新增) */
-        .info-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .info-card div { flex: 1; text-align: center; border-right: 1px solid rgba(255,255,255,0.2); }
-        .info-card div:last-child { border-right: none; }
-        .info-card span { display: block; font-size: 13px; opacity: 0.85; margin-bottom: 5px; }
-        .info-card strong { font-size: 18px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <h1>🏋️‍♂️ 運動、體重與飲食記錄器</h1>
-<div class="info-card">
-        <div>
-            <span>身高</span>
-            <strong>175 cm</strong>
-        </div>
-        <div>
-            <span>起始體重</span>
-            <strong>97.0 kg</strong>
-        </div>
-        <div>
-            <span>2026年9月中 目標減重</span>
-            <strong>4 ~ 8 kg</strong>
-        </div>
-        <div>
-            <span>目標體重區間</span>
-            <strong>89.0 ~ 93.0 kg</strong>
-        </div>
-    </div>
+
     <div class="dashboard-container">
         
         <!-- 1. 今日數據看板 (橫跨整寬，最頂端) -->
@@ -372,18 +342,11 @@
             <div class="history-header-flex">
                 <div style="display: flex; align-items: center; gap: 20px; width: 100%; justify-content: space-between; flex-wrap: wrap;">
                     <h3 style="color: #6f42c1; margin-bottom: 0; border: none; padding: 0; font-size: 22px; font-weight: 800;">📋 一週歷史數據 (智慧歸納版)</h3>
-
                     <!-- 一鍵輸出報告按鈕 -->
                     <button onclick="generateWeeklyReport()" style="background: #6f42c1; width: auto; padding: 8px 16px; font-size:14px; border-radius: 6px;">📋 一鍵輸出本週報告 (複製給 AI)</button>
                 </div>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3 style="margin: 0;">📋 歷史紀錄</h3>
-            <div>
-                <button style="background-color: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; margin-right: 10px;" onclick="openReportModal()">📢 生成今日報告</button>
-                <button style="background-color: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px;" onclick="clearAll()">⚠️ 刪除所有紀錄</button>
-            </div>
-        </div>
+            
             <div class="table-wrapper">
                 <table id="record-table">
                     <thead>
@@ -500,33 +463,32 @@
     }
 
     function saveRecords(records) {
-        function saveRecords(records) {
-    // 1. 繼續保持本地儲存，確保離線也能用
-    records.sort((a, b) => new Date(b.date) - new Date(a.date));
-    localStorage.setItem('fitness_records', JSON.stringify(records));
-    
-    // 2. 更新頁面顯示 (保持你原有的 UI 功能)
-    showRecords();
-    updateChart();
-    calculateTodayNutritionAndSports();
-    renderCustomTags();
-    renderMuscleTags();
-    
-    // 3. 【新增】這裡我們自動把「最新一筆資料」送去雲端
-    const latestRecord = records[0]; 
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyna7m7kTN1AgXtCh_YvPrXpWAr6-26NzqnAAi3c3QH54XW-xV_yW7FiciQZbdWTx19/exec"; // <--- 把網址貼在這裡！
-    
-    fetch(WEB_APP_URL, {
-        method: 'POST',
-        mode: 'no-cors', // 避免跨域錯誤
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(latestRecord)
-    }).then(() => {
-        console.log("資料已同步至雲端試算表");
-    }).catch(err => {
-        console.log("離線中，資料已儲存於本地");
-    });
-}
+        records.sort((a, b) => new Date(b.date) - new Date(a.date));
+        localStorage.setItem('fitness_records', JSON.stringify(records));
+        showRecords();
+        updateChart();
+        calculateTodayNutritionAndSports();
+        renderCustomTags();
+        renderMuscleTags(); 
+    }
+
+    function toggleCollapse(contentId, arrowId, storageKey, forceOpen = null) {
+        const content = document.getElementById(contentId);
+        const arrow = document.getElementById(arrowId);
+        
+        let shouldOpen = !content.classList.contains('open');
+        if (forceOpen !== null) shouldOpen = forceOpen;
+
+        if (shouldOpen) {
+            content.classList.add('open');
+            arrow.innerText = "▲";
+            localStorage.setItem(storageKey, 'true');
+        } else {
+            content.classList.remove('open');
+            arrow.innerText = "▼";
+            localStorage.setItem(storageKey, 'false');
+        }
+    }
 
     // 💡 切換重訓與有氧輸入欄位
     function toggleSportInputs() {
@@ -1212,79 +1174,6 @@
             saveRecords([]);
         }
     }
-// ========== 每日報告功能 (本次新增) ==========
-    function openReportModal() {
-        const records = localStorage.getItem('fitness_records') ? JSON.parse(localStorage.getItem('fitness_records')) : [];
-        if (records.length === 0) {
-            alert("目前尚無紀錄，無法生成報告！");
-            return;
-        }
-
-        // 取得最新一筆紀錄的日期
-        const todayDate = records[0].date;
-        const todaysRecords = records.filter(r => r.date === todayDate);
-        
-        let weightStr = "未量測";
-        let activitiesStr = "";
-
-        todaysRecords.forEach(r => {
-            if (r.category === "體重") {
-                weightStr = r.weight || r.value; // 兼容不同版本的變數命名
-            } else {
-                let noteInfo = r.note ? `(${r.note})` : "";
-                activitiesStr += `- 類別: ${r.category} | 項目: ${r.name || r.value} ${noteInfo}\n`;
-            }
-        });
-
-        if (activitiesStr === "") activitiesStr = "- 今日無運動或飲食紀錄\n";
-
-        // 組裝報告文字
-        const reportText = `📋 【今日健康與運動報告 - ${todayDate}】
---------------------------------------------
-👤 個人基本檔案：
-- 身高：175 cm
-- 起始體重：97.0 kg
-- 瘦身目標：2026年9月中 減重 4~8 kg (目標體重 89.0~93.0 kg)
-
-📊 今日數據：
-- 體重：${weightStr}
-
-🏃 今日活動與飲食紀錄：
-${activitiesStr}
---------------------------------------------
-🤖 想請 AI (Gemini) 幫我覆盤的地方：
-1. 針對我今天的紀錄，是否有需要調整飲食或運動內容的地方？
-2. 根據我的備註（若有），膝蓋或肩膀的修復狀況是否安全？
-3. 明天的訓練有什麼建議？`;
-
-        document.getElementById('report-text').value = reportText;
-        document.getElementById('reportModal').style.display = "block";
-    }
-
-    function closeReportModal() {
-        document.getElementById('reportModal').style.display = "none";
-    }
-
-    function copyReport() {
-        const text = document.getElementById('report-text');
-        text.select();
-        text.setSelectionRange(0, 99999); // 給手機用
-        navigator.clipboard.writeText(text.value).then(() => {
-            alert("✅ 報告已成功複製到剪貼簿！請直接貼在對話框給我囉！✍️");
-            closeReportModal();
-        }).catch(err => {
-            alert("❌ 複製失敗，請手動全選複製。");
-        });
-    }
 </script>
-<div id="reportModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeReportModal()">&times;</span>
-        <h3 style="color: #2c3e50; margin-top: 0;">📋 今日報告</h3>
-        <p style="font-size: 14px; color: #555;">請複製以下內容並直接貼給 Gemini 進行覆盤：</p>
-        <textarea id="report-text" readonly></textarea>
-        <button style="background-color: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-size: 16px; width: 100%;" onclick="copyReport()">📋 複製報告文字</button>
-    </div>
-</div>
 </body>
 </html>
